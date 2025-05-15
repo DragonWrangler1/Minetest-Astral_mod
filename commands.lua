@@ -46,14 +46,14 @@ minetest.register_chatcommand( "get_astral_day", {
 	description = "Display the current astral day",
 	privs = { astral = true },
 	func = function( playername )
-		local mooth , mooth_name = astral.get_moonth()
+		local month , month_name = astral.get_month()
 		local moon_phase , moon_phase_name = astral.get_moon_phase()
 		local special_sun, special_moon = astral.get_special_day()
 		local event_id, event_name = astral.get_astral_event()
 		local time_of_day = minetest.get_timeofday()
 		local day = minetest.get_day_count()
 		
-		minetest.chat_send_player(playername, "Astral day: " .. moon_phase_name .. " (" .. moon_phase .. ") of " .. moonth_name .. " (" .. moonth .. ") -- special: ".. special_sun .. " / " .. special_moon .. " => " .. event_name )
+		minetest.chat_send_player(playername, "Astral day: " .. moon_phase_name .. " (" .. moon_phase .. ") of " .. month_name .. " (" .. month .. ") -- special: ".. special_sun .. " / " .. special_moon .. " => " .. event_name )
 		--minetest.chat_send_player(playername, "Astral day: " .. moon_phase_name .. " (" .. moon_phase .. ") of " .. moonth_name .. " (" .. moonth .. ") -- special: ".. special_sun .. " / " .. special_moon .. " => " .. event_name .. " --  D: " .. day .. " H: " .. time_of_day )
 	end
 })
