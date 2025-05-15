@@ -46,7 +46,7 @@ minetest.register_chatcommand( "get_astral_day", {
 	description = "Display the current astral day",
 	privs = { astral = true },
 	func = function( playername )
-		local moonth , moonth_name = astral.get_moonth()
+		local mooth , mooth_name = astral.get_moonth()
 		local moon_phase , moon_phase_name = astral.get_moon_phase()
 		local special_sun, special_moon = astral.get_special_day()
 		local event_id, event_name = astral.get_astral_event()
