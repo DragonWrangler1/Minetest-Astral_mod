@@ -97,9 +97,37 @@ end
 
 function astral.trigger_phase_callbacks()
 	local data = astral.data
-	local current_phase = data.special_moon ~= "normal" and data.special_moon or (data.special_sun ~= "normal" and data.special_sun or "phase_" .. data.moon_phase)
+	local time = minetest.get_timeofday()
 
-	if astral.last_notified_phase ~= current_phase then
+	-- Determine the currently active event or phase name and its object type
+	local current_phase
+	local is_moon = false
+	local is_sun = false
+
+	if data.special_moon ~= "normal" then
+		current_phase = data.special_moon
+		is_moon = true
+	elseif data.special_sun ~= "normal" then
+		current_phase = data.special_sun
+		is_sun = true
+	else
+		current_phase = "phase_" .. data.moon_phase
+		is_moon = true
+	end
+
+	-- Moons rise around sunset (0.78), Suns rise around sunrise (0.2)
+	local has_risen = false
+	if is_moon then
+		if time > 0.78 or time < 0.22 then
+			has_risen = true
+		end
+	elseif is_sun then
+		if time > 0.2 and time < 0.8 then
+			has_risen = true
+		end
+	end
+
+	if has_risen and astral.last_notified_phase ~= current_phase then
 		local old_phase = astral.last_notified_phase
 		astral.last_notified_phase = current_phase
 
@@ -112,7 +140,7 @@ function astral.trigger_phase_callbacks()
 
 		-- Also trigger for the numerical phase (e.g. "phase_4")
 		local num_phase = "phase_" .. data.moon_phase
-		if astral.phase_callbacks[num_phase] then
+		if current_phase ~= num_phase and astral.phase_callbacks[num_phase] then
 			for _, cb in ipairs(astral.phase_callbacks[num_phase]) do
 				cb(num_phase, old_phase)
 			end
