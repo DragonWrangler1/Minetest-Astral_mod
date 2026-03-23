@@ -42,6 +42,42 @@ function astral.get_next_solar()
 	return "normal", "None", 0
 end
 
+function astral.apply_calendar_meta(stack, prefix)
+	local meta = stack:get_meta()
+	local show_next = meta:get_int("show_next") == 1
+	local label = (prefix == "lunar") and "Lunar" or "Solar"
+
+	local target, event_name, days
+	if prefix == "lunar" then
+		local nl, nln, nld = astral.get_next_lunar()
+		target = show_next and nl or astral.data.special_moon
+		event_name, days = nln, nld
+	else
+		local ns, nsn, nsd = astral.get_next_solar()
+		target = show_next and ns or astral.data.special_sun
+		event_name, days = nsn, nsd
+	end
+
+	local texture = "astral_" .. prefix .. "_calendar_" .. target .. ".png"
+	local status = show_next and "Upcoming" or "Current"
+	local new_desc = label .. " Calendar (" .. status .. ")\nNext: " .. event_name .. " (" .. days .. " days)"
+
+	local changed = false
+	if meta:get_string("inventory_image") ~= texture then
+		meta:set_string("inventory_image", texture)
+		changed = true
+	end
+	if meta:get_string("wield_image") ~= texture then
+		meta:set_string("wield_image", texture)
+		changed = true
+	end
+	if meta:get_string("description") ~= new_desc then
+		meta:set_string("description", new_desc)
+		changed = true
+	end
+	return changed
+end
+
 function astral.update_calendar_node_entity(pos, ent)
 	local node = minetest.get_node(pos)
 	local prefix = node.name:match("^astral:(.*)_calendar")
@@ -220,31 +256,10 @@ local function register_calendar(prefix, label)
 				local event, event_name, days = get_next()
 				minetest.chat_send_player(name, "Next special event: " .. event_name .. " in " .. days .. " days.")
 			end
+			astral.apply_calendar_meta(itemstack, prefix)
 			return itemstack
 		end,
 	})
-
-	local events = (prefix == "lunar") and
-		{"normal", "blood_moon", "pink_moon", "blue_moon", "harvest_moon", "golden_moon", "super_moon", "blood_moon2", "black_moon", "eerie_moon"} or
-		{"normal", "rainbow_sun", "ring_of_fire", "crescent_sun", "solar_eclipse"}
-
-	for _, e in ipairs(events) do
-		if e ~= "normal" then
-			minetest.register_craftitem(":astral:" .. prefix .. "_calendar_" .. e, {
-				description = label .. " Calendar",
-				inventory_image = "astral_" .. prefix .. "_calendar_" .. e .. ".png",
-				groups = {not_in_creative_inventory = 1},
-				stack_max = 1,
-				on_place = on_place,
-				on_use = function(itemstack, user, pointed_thing)
-					local base = minetest.registered_items["astral:" .. prefix .. "_calendar"]
-					if base and base.on_use then
-						return base.on_use(itemstack, user, pointed_thing)
-					end
-				end,
-			})
-		end
-	end
 end
 
 register_calendar("lunar", "Lunar")
@@ -255,41 +270,36 @@ function astral.update_calendar_item(player)
 	local list = inv:get_list("main")
 	if not list then return end
 
-	local nl, nl_name, nl_days = astral.get_next_lunar()
-	local ns, ns_name, ns_days = astral.get_next_solar()
-
 	local changed = false
 	for i, stack in ipairs(list) do
 		local iname = stack:get_name()
-		local meta = stack:get_meta()
-		local mode = meta:get_int("show_next")
-		local new_name = iname
-		local new_desc = ""
+		local cur_changed = false
 
-		-- Handle legacy name conversion
-		if iname == "astral:calendar" or iname:match("^astral:calendar_") then
-			new_name = "astral:lunar_calendar"
+		-- Handle legacy name conversion and normalize to base names
+		local base_name = iname
+		if iname == "astral:calendar" or iname:match("^astral:calendar_") or iname:match("^astral:lunar_calendar_") then
+			base_name = "astral:lunar_calendar"
+		elseif iname:match("^astral:solar_calendar_") then
+			base_name = "astral:solar_calendar"
 		end
 
-		if new_name:match("^astral:lunar_calendar") then
-			local target = (mode == 1) and nl or data.special_moon
-			new_name = "astral:lunar_calendar_" .. target
-			if target == "normal" then new_name = "astral:lunar_calendar" end
-
-			local status = (mode == 1) and "Upcoming" or "Current"
-			new_desc = "Lunar Calendar (" .. status .. ")\nNext: " .. nl_name .. " (" .. nl_days .. " days)"
-		elseif new_name:match("^astral:solar_calendar") then
-			local target = (mode == 1) and ns or data.special_sun
-			new_name = "astral:solar_calendar_" .. target
-			if target == "normal" then new_name = "astral:solar_calendar" end
-
-			local status = (mode == 1) and "Upcoming" or "Current"
-			new_desc = "Solar Calendar (" .. status .. ")\nNext: " .. ns_name .. " (" .. ns_days .. " days)"
+		if base_name ~= iname then
+			stack:set_name(base_name)
+			iname = base_name
+			cur_changed = true
 		end
 
-		if new_name ~= iname or meta:get_string("description") ~= new_desc then
-			stack:set_name(new_name)
-			stack:get_meta():set_string("description", new_desc)
+		if iname == "astral:lunar_calendar" then
+			if astral.apply_calendar_meta(stack, "lunar") then
+				cur_changed = true
+			end
+		elseif iname == "astral:solar_calendar" then
+			if astral.apply_calendar_meta(stack, "solar") then
+				cur_changed = true
+			end
+		end
+
+		if cur_changed then
 			changed = true
 		end
 	end
