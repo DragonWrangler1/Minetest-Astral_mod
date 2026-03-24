@@ -4,8 +4,7 @@ Astral Redo is a remake of the original astral mod. It replaces standard Minetes
 
 - Lunar Cycles: Tracks 8 distinct moon phases with unique textures.
 - Solar Events: Includes the rainbow sun, ring of fire, crescent sun, and solar eclipse.
-- Lunar Events: Includes the blood moons, pink moon, blue moon, harvest moon, golden moon, super moon, eerie moon, and black moon.
-- Cloud Density: Re-implemented cloud density controls for newer Luanti versions. (something disabled in the original astral mod)
+- Lunar Events: Includes the blood moons, ash moon, blue moon, harvest moon, golden moon, super moon, and black moon.
 - Interactive Calendars: Lunar and Solar calendars that show current or upcoming events.
 
 Calendars
