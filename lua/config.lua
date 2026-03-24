@@ -43,17 +43,16 @@ astral.moon_phase_horizon_colors = {
 	"#02060c",
 	"#010306"
 }
-
--- Light ratio override for each phase (standard night is ~0.15)
+-- Light ratio override for each phase
 astral.moon_phase_light_ratios = {
-	[0] = 0.02, -- Near-total darkness
-	0.05,
-	0.10,
-	0.15, -- Normal night (quarter moon)
-	0.20, -- Full moon (clear but not overly bright)
+	[0] = 0.13, -- No moon shining.. Though This value considers there to be some ambient light sources. What would we do without light!?
 	0.15,
-	0.10,
-	0.05
+	0.17,
+	0.18,
+	0.2,
+	0.18,
+	0.17,
+	0.15
 }
 
 astral.wallmounted_to_yaw = {
