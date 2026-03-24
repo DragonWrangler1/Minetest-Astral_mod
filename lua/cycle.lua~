@@ -7,6 +7,7 @@ astral.month_cycle = {
 	{ special = "harvest_moon" },
 	{ special = "crescent_sun" },
 	{ special = "blood_moon" },
+	{ special = "eerie_moon" },
 	{ special = "normal" },
 	{ special = "golden_moon" },
 	{ special = "ring_of_fire" },
@@ -95,6 +96,16 @@ astral.special_moon_config = {
 		horizon_color = "#2a0a0a",
 		star_color = "#ffcbcb70",
 		light_ratio = 0.19,
+	},
+	eerie_moon = {
+		name = "Eerie Moon",
+		at_phase = 4,
+		texture = "eerie_moon.png",
+		scale = 2.5,
+		sky_color = "#021a02",
+		horizon_color = "#042a04",
+		star_color = "#44ff4470",
+		light_ratio = 0.16,
 	},
 }
 astral.special_sun_config = {
