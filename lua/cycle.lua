@@ -27,7 +27,7 @@ astral.special_moon_config = {
 		sky_color = "#1a0202",
 		horizon_color = "#2a0404",
 		star_color = "#ff444470",
-		light_ratio = 0.08,
+		light_ratio = 0.14,
 	},
 	pink_moon = {
 		name = "Pink Moon",
@@ -47,7 +47,7 @@ astral.special_moon_config = {
 		sky_color = "#020a1a",
 		horizon_color = "#04102a",
 		star_color = "#8888ff70",
-		light_ratio = 0.25,
+		light_ratio = 0.2,
 	},
 	harvest_moon = {
 		name = "Harvest Moon",
@@ -57,7 +57,7 @@ astral.special_moon_config = {
 		sky_color = "#1a1002",
 		horizon_color = "#2a1a04",
 		star_color = "#ffaa4470",
-		light_ratio = 0.22,
+		light_ratio = 0.19,
 	},
 	black_moon = {
 		name = "Black Moon",
@@ -66,7 +66,7 @@ astral.special_moon_config = {
 		scale = 2.8,
 		sky_color = "#000000",
 		horizon_color = "#020202",
-		light_ratio = 0.01,
+		light_ratio = 0.15,
 	},
 	golden_moon = {
 		name = "Golden Crescent",
@@ -76,7 +76,7 @@ astral.special_moon_config = {
 		sky_color = "#151005",
 		horizon_color = "#20180a",
 		star_color = "#ffff9088",
-		light_ratio = 0.1,
+		light_ratio = 0.15,
 	},
 	super_moon = {
 		name = "Super Moon",
@@ -85,7 +85,7 @@ astral.special_moon_config = {
 		scale = 5,
 		sky_color = "#10182a",
 		horizon_color = "#15223a",
-		light_ratio = 0.35,
+		light_ratio = 0.25,
 	},
 	blood_moon2 = {
 		name = "Great Blood Moon",
@@ -95,7 +95,7 @@ astral.special_moon_config = {
 		sky_color = "#1a0505",
 		horizon_color = "#2a0a0a",
 		star_color = "#ffcbcb70",
-		light_ratio = 0.12,
+		light_ratio = 0.19,
 	},
 	eerie_moon = {
 		name = "Eerie Moon",
@@ -105,10 +105,9 @@ astral.special_moon_config = {
 		sky_color = "#021a02",
 		horizon_color = "#042a04",
 		star_color = "#44ff4470",
-		light_ratio = 0.18,
+		light_ratio = 0.16,
 	},
 }
-
 astral.special_sun_config = {
 	rainbow_sun = {
 		name = "Rainbow Sun",
