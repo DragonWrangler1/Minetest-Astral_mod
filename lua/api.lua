@@ -24,6 +24,7 @@ astral.data = {
 	star_day_opacity = 0.0,
 	cloud_density = 0.4,
 	light_ratio = 0.15, -- Normal night ratio
+	--star_seed = tonumber(minetest.get_mapgen_setting("seed")) or 19384756356656,
 }
 
 astral.day_offset = mod_storage:get_int("astral_day_offset")

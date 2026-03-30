@@ -21,4 +21,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-CLAUDE code was used in organizing this mod. Should you find code issues. Please submit an issue on github.
+CLAUDE code was used in organizing this mod. Should you find code issues. Please submit an issue on github.\
+
+Organized means:
+
+It separated code into their own files.
+Added comments to code.
+Organized the functions.

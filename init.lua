@@ -16,10 +16,7 @@ local modules = {
 
 for _, mod in ipairs(modules) do
 	local filepath = path .. "/lua/" .. mod .. ".lua"
-	local ok, err = pcall(dofile, filepath)
-	if not ok then
-		minetest.log("error", "[astral_redo] Failed to load " .. mod .. ": " .. tostring(err))
-	end
+	dofile(filepath)
 end
 
 minetest.log("action", "[astral_redo] Mod loaded successfully")
