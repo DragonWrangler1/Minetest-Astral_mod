@@ -1,9 +1,9 @@
 local timer = 0
 local cal_timer = 0
 
-minetest.register_globalstep(function(dtime)
+core.register_globalstep(function(dtime)
 	-- Update sky and light ratios every step for smoothness and instant transitions
-	for _, player in ipairs(minetest.get_connected_players()) do
+	for _, player in ipairs(core.get_connected_players()) do
 		astral.set_player_sky(player)
 		astral.update_player_ratio(player, dtime)
 	end
@@ -11,11 +11,11 @@ minetest.register_globalstep(function(dtime)
 	-- Update calendar items and entities every 10 seconds
 	cal_timer = cal_timer + dtime
 	if cal_timer > 10 then
-		for _, player in ipairs(minetest.get_connected_players()) do
+		for _, player in ipairs(core.get_connected_players()) do
 			astral.update_calendar_item(player)
 
 			local ppos = player:get_pos()
-			local nodes = minetest.find_nodes_in_area(
+			local nodes = core.find_nodes_in_area(
 				{x=ppos.x-12, y=ppos.y-12, z=ppos.z-12},
 				{x=ppos.x+12, y=ppos.y+12, z=ppos.z+12},
 				{"group:calendar"}
@@ -34,7 +34,7 @@ minetest.register_globalstep(function(dtime)
 	timer = 0
 end)
 
-minetest.register_on_joinplayer(function(player)
+core.register_on_joinplayer(function(player)
 	-- Recompute once on join to ensure data is absolutely current for this player
 	astral.compute_moon()
 	astral.compute_sun()

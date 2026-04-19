@@ -127,8 +127,8 @@ function astral.update_player_ratio(player, dtime, force)
 		return
 	end
 
-	local time = minetest.get_timeofday()
-	local engine_ratio = minetest.time_to_day_night_ratio(time)
+	local time = core.get_timeofday()
+	local engine_ratio = core.time_to_day_night_ratio(time)
 
 	-- Define targets for day and night
 	local night_target = data.light_ratio or 0.15

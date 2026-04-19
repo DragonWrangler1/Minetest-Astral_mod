@@ -1,6 +1,6 @@
 astral = {}
 
-local path = minetest.get_modpath("astral_redo")
+local path = core.get_modpath("astral_redo")
 
 -- Load modules in order
 local modules = {
@@ -19,4 +19,4 @@ for _, mod in ipairs(modules) do
 	dofile(filepath)
 end
 
-minetest.log("action", "[astral_redo] Mod loaded successfully")
+core.log("action", "[astral_redo] Mod loaded successfully")

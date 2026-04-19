@@ -1,6 +1,6 @@
 # Astral Redo
 
-Astral Redo is a remake of the original astral mod. It replaces standard Minetest sky behavior with a dynamic system that tracks lunar cycles, as well as both lunar and solar events.
+Astral Redo is a remake of the original astral mod. It replaces standard Luanti/Minetest sky behavior with a dynamic system that tracks lunar cycles, as well as both lunar and solar events.
 
 - Lunar Cycles: Tracks 8 distinct moon phases with unique textures.
 - Solar Events: Includes the rainbow sun, ring of fire, crescent sun, and solar eclipse.

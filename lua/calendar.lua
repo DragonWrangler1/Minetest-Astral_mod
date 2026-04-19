@@ -1,7 +1,7 @@
 local data = astral.data
 
 function astral.get_next_lunar()
-	local moon_day = minetest.get_day_count() + astral.day_offset
+	local moon_day = core.get_day_count() + astral.day_offset
 	local cycle_len = astral.constants.MOON_PHASE_COUNT
 	local month_cycle_len = #astral.month_cycle
 
@@ -22,7 +22,7 @@ function astral.get_next_lunar()
 end
 
 function astral.get_next_solar()
-	local sun_day = minetest.get_day_count() + astral.day_offset
+	local sun_day = core.get_day_count() + astral.day_offset
 	local cycle_len = astral.constants.MOON_PHASE_COUNT
 	local month_cycle_len = #astral.month_cycle
 
@@ -79,11 +79,11 @@ function astral.apply_calendar_meta(stack, prefix)
 end
 
 function astral.update_calendar_node_entity(pos, ent)
-	local node = minetest.get_node(pos)
+	local node = core.get_node(pos)
 	local prefix = node.name:match("^astral:(.*)_calendar")
 	if not prefix then return end
 
-	local meta = minetest.get_meta(pos)
+	local meta = core.get_meta(pos)
 	local show_next = meta:get_int("show_next") == 1
 
 	local target
@@ -113,7 +113,7 @@ function astral.update_calendar_node_entity(pos, ent)
 
 	-- Find or spawn entity
 	if not ent then
-		local objects = minetest.get_objects_inside_radius(pos, 0.5)
+		local objects = core.get_objects_inside_radius(pos, 0.5)
 		for _, obj in ipairs(objects) do
 			local luaent = obj:get_luaentity()
 			if luaent and luaent.name == "astral:calendar_entity" then
@@ -124,7 +124,7 @@ function astral.update_calendar_node_entity(pos, ent)
 	end
 
 	if not ent then
-		ent = minetest.add_entity(epos, "astral:calendar_entity")
+		ent = core.add_entity(epos, "astral:calendar_entity")
 	else
 		ent:set_pos(epos)
 	end
@@ -140,7 +140,7 @@ function astral.update_calendar_node_entity(pos, ent)
 	end
 end
 
-minetest.register_entity(":astral:calendar_entity", {
+core.register_entity(":astral:calendar_entity", {
 	initial_properties = {
 		visual = "upright_sprite",
 		textures = {"astral_lunar_calendar_normal.png"},
@@ -154,7 +154,7 @@ minetest.register_entity(":astral:calendar_entity", {
 		self.object:set_armor_groups({immortal = 1})
 		local pos = self.object:get_pos()
 		local node_pos = vector.round(pos)
-		local node = minetest.get_node(node_pos)
+		local node = core.get_node(node_pos)
 		if not node.name:match("^astral:.*_calendar") then
 			self.object:remove()
 			return
@@ -168,7 +168,7 @@ local function register_calendar(prefix, label)
 	local get_next = (prefix == "lunar") and astral.get_next_lunar or astral.get_next_solar
 	local special_config = (prefix == "lunar") and astral.special_moon_config or astral.special_sun_config
 
-	minetest.register_node(":astral:" .. prefix .. "_calendar_node", {
+	core.register_node(":astral:" .. prefix .. "_calendar_node", {
 		description = label .. " Calendar",
 		drawtype = "nodebox",
 		node_box = {
@@ -191,7 +191,7 @@ local function register_calendar(prefix, label)
 		end,
 
 		on_destruct = function(pos)
-			local objects = minetest.get_objects_inside_radius(pos, 0.6)
+			local objects = core.get_objects_inside_radius(pos, 0.6)
 			for _, obj in ipairs(objects) do
 				local luaent = obj:get_luaentity()
 				if luaent and luaent.name == "astral:calendar_entity" then
@@ -202,29 +202,29 @@ local function register_calendar(prefix, label)
 
 		on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
 			if not clicker or not clicker:is_player() then return end
-			local meta = minetest.get_meta(pos)
+			local meta = core.get_meta(pos)
 			local show_next = meta:get_int("show_next")
 			meta:set_int("show_next", 1 - show_next)
 			astral.update_calendar_node_entity(pos)
 
 			local status = (1 - show_next == 1) and "upcoming" or "current"
-			minetest.chat_send_player(clicker:get_player_name(), label .. " Calendar set to show " .. status .. " event.")
+			core.chat_send_player(clicker:get_player_name(), label .. " Calendar set to show " .. status .. " event.")
 		end,
 	})
 
 	local on_place = function(itemstack, placer, pointed_thing)
 		local pos = pointed_thing.above
 		local under = pointed_thing.under
-		local node = minetest.get_node(under)
-		local def = minetest.registered_nodes[node.name]
+		local node = core.get_node(under)
+		local def = core.registered_nodes[node.name]
 		if def and def.on_rightclick and not placer:get_player_control().sneak then
 			return def.on_rightclick(under, node, placer, itemstack, pointed_thing)
 		end
 
-		local res = minetest.item_place(ItemStack("astral:" .. prefix .. "_calendar_node"), placer, pointed_thing)
+		local res = core.item_place(ItemStack("astral:" .. prefix .. "_calendar_node"), placer, pointed_thing)
 		if res then
 			local meta = itemstack:get_meta()
-			local node_meta = minetest.get_meta(pos)
+			local node_meta = core.get_meta(pos)
 			node_meta:set_int("show_next", meta:get_int("show_next"))
 			astral.update_calendar_node_entity(pos)
 			itemstack:take_item()
@@ -232,7 +232,7 @@ local function register_calendar(prefix, label)
 		return itemstack
 	end
 
-	minetest.register_craftitem(":astral:" .. prefix .. "_calendar", {
+	core.register_craftitem(":astral:" .. prefix .. "_calendar", {
 		description = label .. " Calendar",
 		inventory_image = "astral_" .. prefix .. "_calendar_normal.png",
 		stack_max = 1,
@@ -247,14 +247,14 @@ local function register_calendar(prefix, label)
 				meta:set_int("show_next", 0)
 				local cur_special = (prefix == "lunar") and data.special_moon or data.special_sun
 				if cur_special ~= "normal" then
-					minetest.chat_send_player(name, "Current event: " .. (special_config[cur_special].name or cur_special))
+					core.chat_send_player(name, "Current event: " .. (special_config[cur_special].name or cur_special))
 				else
-					minetest.chat_send_player(name, "No special " .. prefix .. " event today.")
+					core.chat_send_player(name, "No special " .. prefix .. " event today.")
 				end
 			else
 				meta:set_int("show_next", 1)
 				local event, event_name, days = get_next()
-				minetest.chat_send_player(name, "Next special event: " .. event_name .. " in " .. days .. " days.")
+				core.chat_send_player(name, "Next special event: " .. event_name .. " in " .. days .. " days.")
 			end
 			astral.apply_calendar_meta(itemstack, prefix)
 			return itemstack

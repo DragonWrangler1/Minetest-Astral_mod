@@ -1,8 +1,8 @@
 function astral.compute_moon()
 	local data = astral.data
 	local constants = astral.constants
-	local moon_day = minetest.get_day_count() + astral.day_offset
-	if minetest.get_timeofday() > 0.5 then
+	local moon_day = core.get_day_count() + astral.day_offset
+	if core.get_timeofday() > 0.5 then
 		moon_day = moon_day + 1
 	end
 
@@ -48,7 +48,7 @@ end
 function astral.compute_sun()
 	local data = astral.data
 	local constants = astral.constants
-	local sun_day = minetest.get_day_count() + astral.day_offset
+	local sun_day = core.get_day_count() + astral.day_offset
 	local local_moon_phase = sun_day % constants.MOON_PHASE_COUNT
 	local cycle_count = math.floor(sun_day / constants.MOON_PHASE_COUNT)
 	local local_month = 1 + cycle_count % #astral.month_cycle
@@ -79,7 +79,7 @@ end
 
 function astral.compute_astral_event()
 	local data = astral.data
-	local time_of_day = minetest.get_timeofday()
+	local time_of_day = core.get_timeofday()
 	local moon_config = astral.special_moon_config[data.special_moon]
 	local sun_config = astral.special_sun_config[data.special_sun]
 
@@ -97,7 +97,7 @@ end
 
 function astral.trigger_phase_callbacks()
 	local data = astral.data
-	local time = minetest.get_timeofday()
+	local time = core.get_timeofday()
 
 	-- Determine the currently active event or phase name and its object type
 	local current_phase
@@ -153,7 +153,7 @@ function astral.update_all_players(dtime)
 	astral.compute_sun()
 	astral.compute_astral_event()
 	astral.trigger_phase_callbacks()
-	for _, player in ipairs(minetest.get_connected_players()) do
+	for _, player in ipairs(core.get_connected_players()) do
 		astral.set_player_sky(player)
 		if astral.update_player_ratio then
 			astral.update_player_ratio(player, dtime)
