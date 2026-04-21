@@ -34,7 +34,7 @@ astral.set_phase = function(name_or_number)
 	if not target_phase then return false, "Phase or special event not found" end
 	target_phase = math.floor(target_phase) % astral.constants.MOON_PHASE_COUNT
 
-	local current_day = minetest.get_day_count()
+	local current_day = core.get_day_count()
 
 	local new_offset
 	if target_month then
@@ -51,60 +51,60 @@ astral.set_phase = function(name_or_number)
 	return true
 end
 
-minetest.register_privilege( "astral", {
+core.register_privilege( "astral", {
 	description = "Change astral features",
 	give_to_singleplayer = false
 })
 
-minetest.register_chatcommand( "set_astral_day_offset", {
+core.register_chatcommand( "set_astral_day_offset", {
 	params = "<offset>",
 	description = "Set the astral day offset to the given value",
 	privs = { astral = true },
 	func = function( playername, params )
 		if params == nil or params == "" then
-			minetest.chat_send_player(playername, "Missing day offset number")
+			core.chat_send_player(playername, "Missing day offset number")
 		else
 			astral.set_day_offset( params )
 		end
 	end
 })
 
-minetest.register_chatcommand( "set_astral_phase", {
+core.register_chatcommand( "set_astral_phase", {
 	params = "<phase name/number>",
 	description = "Set the moon/sun phase or special event by name or number (0-7)",
 	privs = { astral = true },
 	func = function( playername, params )
 		if params == nil or params == "" then
-			minetest.chat_send_player(playername, "Missing phase name or number")
+			core.chat_send_player(playername, "Missing phase name or number")
 		else
 			local success, msg = astral.set_phase( params )
 			if success then
-				minetest.chat_send_player(playername, "Astral phase set to: " .. params)
+				core.chat_send_player(playername, "Astral phase set to: " .. params)
 			else
-				minetest.chat_send_player(playername, "Error: " .. (msg or "Unknown error"))
+				core.chat_send_player(playername, "Error: " .. (msg or "Unknown error"))
 			end
 		end
 	end
 })
 
-minetest.register_chatcommand( "get_astral_day_offset", {
+core.register_chatcommand( "get_astral_day_offset", {
 	description = "Get the astral day offset",
 	privs = { astral = true },
 	func = function( playername )
-		minetest.chat_send_player(playername, "Astral day offset: " .. astral.day_offset )
+		core.chat_send_player(playername, "Astral day offset: " .. astral.day_offset )
 	end
 })
 
-minetest.register_chatcommand( "get_astral_event", {
+core.register_chatcommand( "get_astral_event", {
 	description = "Display the current astral event",
 	privs = { astral = true },
 	func = function( playername )
 		local id, name = astral.data.astral_event, astral.data.astral_event_name
-		minetest.chat_send_player(playername, "Astral event: " .. name )
+		core.chat_send_player(playername, "Astral event: " .. name )
 	end
 })
 
-minetest.register_chatcommand( "get_astral_day", {
+core.register_chatcommand( "get_astral_day", {
 	description = "Display the current astral day",
 	privs = { astral = true },
 	func = function( playername )
@@ -115,6 +115,6 @@ minetest.register_chatcommand( "get_astral_day", {
 		local special_sun, special_moon = data.special_sun, data.special_moon
 		local event_name = data.astral_event_name
 		
-		minetest.chat_send_player(playername, "Astral day: " .. moon_phase_name .. " (" .. moon_phase .. ") of Month " .. month .. " -- special: ".. special_sun .. " / " .. special_moon .. " => " .. event_name )
+		core.chat_send_player(playername, "Astral day: " .. moon_phase_name .. " (" .. moon_phase .. ") of Month " .. month .. " -- special: ".. special_sun .. " / " .. special_moon .. " => " .. event_name )
 	end
 })
